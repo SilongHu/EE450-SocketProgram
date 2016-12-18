@@ -1,0 +1,112 @@
+ ********************************************************************************
+                         EE450 Socket Project README
+
+
+                            Name:    SilongHu
+                            Session: 4
+                            USC ID:  1562329371
+
+********************************************************************************
+
+What I Have Done:
+
+	In this socket project, I have successfully implemented all the requirements
+	with one client file, one AWS server file, and three individual server files.
+
+    At the beginning, I used Ubuntu virtual machine with IDE to code and test
+    my programs. After I finished debug testing, I moved all the files to the
+    USC Nunki server and tested my program as well. It worked as expected.
+	
+********************************************************************************
+
+What Are My Codes:
+	
+	client.c:	Get reduction type and read original data, sending them to the AWS 
+				via TCP connection. And receive the final result from AWS by TCP.
+				
+	aws.c :		Receive the reduction type and original data via TCP, then divide 
+				numbers into 3 parts, and send them to server A, server B, server
+				C separately by UDP connection. Also the reduction type. Receive
+				each result from corresponding server via UDP and then, send these
+				results to client using TCP.
+				
+	serverA.c	Get the first one-third of the original data and reduction type from 
+				aws by UDP. According to the reduction type, choose different functions
+				dealing with data, then send the result back to aws using UDP.
+				
+	serverB.c	Get the second one-third of the original data and reduction type from 
+				aws by UDP. According to the reduction type, choose different functions
+				dealing with data, then send the result back to aws using UDP.
+				
+	serverC.c	Get the last one-third of the original data and reduction type from 
+				aws by UDP. According to the reduction type, choose different functions
+				dealing with data, then send the result back to aws using UDP.
+				
+********************************************************************************
+
+How TA Runs:
+
+		Open 5 command window, and make all firstly. Then for the 2nd 3rd 4th and 5th
+		window, input command "make serverA" "make serverB" "make serverC" "make aws"
+		separately. And finally input "./client <functions>" in the 1st window.
+		
+			command									actions
+			make all			Compiles client.c aws.c serverA.c serverB.c serverC.c
+								and creates corresponding executable
+			make serverA    	Runs server A
+			make serverB    	Runs server B
+			make serverC    	Runs server C
+			make aws    		Runs aws
+			./client <function>	Starts client
+			
+********************************************************************************
+
+Message Format:
+
+		1. The message get from client:
+		
+		Reduction type:  String (char[]) format, ASCII encoding, char[3].
+		Buffer: Read each line of file and store in buffer[1024],String (char[]) format
+		Nums: Interger array format, 300 elements
+		Result: Interger format, from AWS.
+		
+		2. The message get from AWS:
+		
+		Reduction type:  String (char[]) format, ASCII encoding, char[3] from client
+		Nums: Interger array format, 300 elements from client
+		Results: 3 Interger format, from Server A B and C.
+		
+		3. The message get from server A, server B and server C:
+		
+		Reduction type:  String (char[]) format, ASCII encoding, char[3] from AWS
+		Nums: Interger array format, 100 elements from AWS
+		Results: Interger format, send to aws.
+		
+********************************************************************************
+
+Idiosyncrasy:
+
+       When you input the other functions(not min/max/sum/sos), the client would
+	   exit and you would re-run it again, in that case, make sure you input the 
+	   right functions name.
+	   No idiosyncrasies detected for the program itself, which is that it may
+       be affected by the UNIX OS conditions but the problem is not at the
+       program. All possible error may occurred due to the OS's conditions are
+       caught and are properly handled.
+		
+********************************************************************************
+
+Code Reusing:
+        a. Socket Programming via TCP and UDP is reused(modified) from:
+           http://www.linuxhowtos.org/C_C++/socket.htm
+
+        b. To make sure print the reduction string correctly:
+           https://piazza.com/class/isc5ltdqa0h1qh?cid=79
+
+        c. All other code, including the fileRead-related code are written and
+           implemented by myself. I used the provided knowledge base materials
+           as for reference purpose only.
+		   
+********************************************************************************
+
+<EOF>
